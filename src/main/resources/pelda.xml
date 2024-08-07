@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<sample>
+    <lines>
+        <line>
+            <id>000001</id>
+            <name>Kristály cukor</name>
+            <quantity>5</quantity>
+            <unitOfMeasure>KG</unitOfMeasure>
+            <unitPrice>259</unitPrice>
+        </line>
+        <line>
+            <id>000002</id>
+            <name>Csülök pörkölt</name>
+            <quantity>1</quantity>
+            <unitOfMeasure>CUSTOM</unitOfMeasure>
+            <customUnitOfMeasure>tányér</customUnitOfMeasure>
+            <unitPrice>6900</unitPrice>
+        </line>
+        <line>
+            <id>000003</id>
+            <name>Irodai szék</name>
+            <quantity>19</quantity>
+            <unitOfMeasure>PIECE</unitOfMeasure>
+            <unitPrice>75890</unitPrice>
+        </line>
+    </lines>
+    <invoices>
+        <invoice>
+            <id>12345</id>
+            <invoiceNumber>ICELL-2023-03</invoiceNumber>
+            <invoiceType>NORMAL</invoiceType>
+            <supplierTaxNumber>31415926</supplierTaxNumber>
+            <customerTaxNumber>32468972</customerTaxNumber>
+            <lines>
+                <line>000001</line>
+                <line>000002</line>
+            </lines>
+            <sumPrice>8195</sumPrice>
+        </invoice>
+        <invoice>
+            <id>54321</id>
+            <invoiceNumber>JAVA2023-03/10</invoiceNumber>
+            <invoiceType>NORMAL</invoiceType>
+            <supplierTaxNumber>32468972</supplierTaxNumber>
+            <customerTaxNumber>31415926</customerTaxNumber>
+            <lines>
+                <line>000001</line>
+                <line>000002</line>
+                <line>000003</line>
+            </lines>
+            <sumPrice>1450105</sumPrice>
+        </invoice>
+        <invoice>
+            <id>32154</id>
+            <invoiceNumber>SIMMPLE0002</invoiceNumber>
+            <invoiceType>SIMPLE</invoiceType>
+            <supplierTaxNumber>31415926</supplierTaxNumber>
+            <customerTaxNumber>31415926</customerTaxNumber>
+            <sumPrice>100</sumPrice>
+        </invoice>
+    </invoices>
+</sample>

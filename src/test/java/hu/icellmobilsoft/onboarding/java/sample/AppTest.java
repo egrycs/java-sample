@@ -1,4 +1,4 @@
-package hu.icellmobilsoft.onboarding;
+package hu.icellmobilsoft.onboarding.java.sample;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
