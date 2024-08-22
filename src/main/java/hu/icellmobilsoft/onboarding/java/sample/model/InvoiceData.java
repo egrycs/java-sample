@@ -5,14 +5,18 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 import java.util.List;
 
-public class Sample {
+public class InvoiceData {
     @JacksonXmlElementWrapper(localName = "lines")
     @JacksonXmlProperty(localName = "line")
     private List<Line> lines;
 
-    @JacksonXmlElementWrapper(localName = "invoices")
     @JacksonXmlProperty(localName = "invoice")
-    private List<Invoice> invoices;
+    private Invoice invoice;
+
+    public InvoiceData(Invoice invoice, List<Line> lines) {
+        this.invoice = invoice;
+        this.lines = lines;
+    }
 
     // Getters and setters
     public List<Line> getLines() {
@@ -23,20 +27,20 @@ public class Sample {
         this.lines = lines;
     }
 
-    public List<Invoice> getInvoices() {
-        return invoices;
+    public Invoice getInvoice() {
+        return invoice;
     }
 
-    public void setInvoices(List<Invoice> invoices) {
-        this.invoices = invoices;
+    public void setInvoices(Invoice invoice) {
+        this.invoice = invoice;
     }
 
     // Ez csak tesztre van használva
     @Override
     public String toString() {
-        return '\n' + "Sample{" +
+        return '\n' + "\tInvoiceData{" +
                 '\n' + "\t\tlines=" + lines + "," +
-                '\n' + "\t\tinvoices=" + invoices +
+                '\n' + "\t\tinvoice=" + invoice +
                 '\n' + "\t}";
     }
 }

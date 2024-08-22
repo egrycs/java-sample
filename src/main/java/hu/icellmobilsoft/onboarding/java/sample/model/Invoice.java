@@ -2,15 +2,30 @@ package hu.icellmobilsoft.onboarding.java.sample.model;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Invoice {
+
+    @JacksonXmlProperty(localName = "id")
     private String id;
+
+    @JacksonXmlProperty(localName = "invoiceNumber")
     private String invoiceNumber;
+
+    @JacksonXmlProperty(localName = "invoiceType")
     private String invoiceType;
+
+    @JacksonXmlProperty(localName = "supplierTaxNumber")
     private String supplierTaxNumber;
+
+    @JacksonXmlProperty(localName = "customerTaxNumber")
     private String customerTaxNumber;
-    private int sumPrice;
+
+
+    @JacksonXmlProperty(localName = "sumPrice")
+    private double sumPrice;
 
     @JacksonXmlElementWrapper(localName = "lines")
     @JacksonXmlProperty(localName = "line")
@@ -57,11 +72,11 @@ public class Invoice {
         this.customerTaxNumber = customerTaxNumber;
     }
 
-    public int getSumPrice() {
+    public double getSumPrice() {
         return sumPrice;
     }
 
-    public void setSumPrice(int sumPrice) {
+    public void setSumPrice(double sumPrice) {
         this.sumPrice = sumPrice;
     }
 
@@ -73,9 +88,10 @@ public class Invoice {
         this.lines = lines;
     }
 
+    // Ez csak tesztre van használva
     @Override
     public String toString() {
-        return "Invoice{" +
+        return '\n' + "\t\t\t{" +
                 "id='" + id + '\'' +
                 ", invoiceNumber='" + invoiceNumber + '\'' +
                 ", invoiceType='" + invoiceType + '\'' +
