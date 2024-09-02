@@ -71,8 +71,10 @@ public class SampleLineAction {
         return invoiceRepository.getAllInvoices().stream()
                 .map(invoice -> new InvoiceData(
                                 invoice,
-                                invoice.getLines().stream().map(line -> lineRepository.findLine(line))
-                                        .filter(Optional::isPresent).map(Optional::get).toList()
+                                invoice.getLines() == null
+                                        ? Collections.emptyList()
+                                        : invoice.getLines().stream().map(line -> lineRepository.findLine(line))
+                                            .filter(Optional::isPresent).map(Optional::get).toList()
                         )
                 ).toList();
     }
