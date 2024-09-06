@@ -1,81 +1,64 @@
 package hu.icellmobilsoft.onboarding.java.sample.action;
 
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import hu.icellmobilsoft.onboarding.java.sample.model.Invoice;
 import hu.icellmobilsoft.onboarding.java.sample.model.InvoiceData;
 import hu.icellmobilsoft.onboarding.java.sample.model.Line;
-import hu.icellmobilsoft.onboarding.java.sample.model.Sample;
 import hu.icellmobilsoft.onboarding.java.sample.repository.InvoiceRepository;
 import hu.icellmobilsoft.onboarding.java.sample.repository.LineRepository;
+import hu.icellmobilsoft.onboarding.java.sample.rest.LineDeleteException;
+import hu.icellmobilsoft.onboarding.java.sample.rest.LoadDataImpl;
+import hu.icellmobilsoft.onboarding.java.sample.rest.RequestDataImpl;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Stream;
 
 public class SampleLineAction {
 
-    private InvoiceRepository invoiceRepository;
     private LineRepository lineRepository;
+    private LoadDataImpl loadDataImpl;
+    private RequestDataImpl requestDataImpl;
 
     public SampleLineAction(InvoiceRepository invoiceRepository, LineRepository lineRepository) {
-        this.invoiceRepository = invoiceRepository;
         this.lineRepository = lineRepository;
+        this.loadDataImpl = new LoadDataImpl(invoiceRepository, lineRepository);
+        this.requestDataImpl = new RequestDataImpl(invoiceRepository, lineRepository);
     }
 
     public void loadFromXml(String xml) {
-        try {
-            XmlMapper xmlMapper = new XmlMapper();
-            Sample sample = xmlMapper.readValue(xml, Sample.class);
-
-            for (Invoice invoice : sample.getInvoices()) {
-                invoiceRepository.saveInvoice(invoice);
-            }
-            for (Line line : sample.getLines()) {
-                lineRepository.saveLine(line);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        loadDataImpl.loadFromXml(xml);
     }
 
     public void loadFromJson(String json) {
-        try {
-            JsonMapper jsonMapper = new JsonMapper();
-            Sample sample = jsonMapper.readValue(json, Sample.class);
-
-            for (Invoice invoice : sample.getInvoices()) {
-                invoiceRepository.saveInvoice(invoice);
-            }
-            for (Line line : sample.getLines()) {
-                lineRepository.saveLine(line);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        loadDataImpl.loadFromJson(json);
     }
 
     public InvoiceData getInvoiceData(String id) {
-        Optional<Invoice> optionalInvoice = invoiceRepository.findInvoice(id);
-        return optionalInvoice.map(invoice -> new InvoiceData(
-                        invoice,
-                        invoice.getLines() == null
-                                ? Collections.emptyList()
-                                : invoice.getLines().stream().map(line -> lineRepository.findLine(line))
-                                    .filter(Optional::isPresent).map(Optional::get).toList()
-                )
-        ).orElse(null);
+        return requestDataImpl.getInvoiceData(id);
     }
 
     public List<InvoiceData> getAllInvoicesData() {
-        return invoiceRepository.getAllInvoices().stream()
-                .map(invoice -> new InvoiceData(
-                                invoice,
-                                invoice.getLines() == null
-                                        ? Collections.emptyList()
-                                        : invoice.getLines().stream().map(line -> lineRepository.findLine(line))
-                                            .filter(Optional::isPresent).map(Optional::get).toList()
-                        )
-                ).toList();
+        return requestDataImpl.getAllInvoicesData();
+    }
+
+    public List<InvoiceData> queryInvoicesData(String invoiceNumber, String invoiceType) {
+        return this.getAllInvoicesData()
+                .stream()
+                .filter(
+                        invoiceData -> invoiceData.getInvoice().getInvoiceNumber().equals(invoiceNumber)
+                                || invoiceData.getInvoice().getInvoiceType().equals(invoiceType))
+                .toList();
+    }
+
+    public Line deleteLine(String id) throws LineDeleteException { // LineDeleteException, EntityNotFoundException
+        if (isLineAssignedToInvoice(id)) {
+            throw new LineDeleteException("The line with id " + id + " is assigned to an invoice and cannot be deleted.");
+        }
+        return lineRepository.deleteLine(id);
+    }
+
+    private boolean isLineAssignedToInvoice(String lineId) {
+        return this.getAllInvoicesData().stream().flatMap(invoiceData ->
+            invoiceData.getInvoice().getLines() == null ? Stream.of() : invoiceData.getInvoice().getLines().stream()
+        ).anyMatch(line -> line.equals(lineId));
     }
 }

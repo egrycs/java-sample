@@ -1,14 +1,14 @@
 {
   "lines": [
       {
-        "id": 1,
+        "id": "000001",
         "name": "Kristály cukor",
         "quantity": 5,
         "unitOfMeasure": "KG",
         "unitPrice": 259
       },
       {
-        "id": 2,
+        "id": "000002",
         "name": "Csülök pörkölt",
         "quantity": 1,
         "unitOfMeasure": "CUSTOM",
@@ -16,8 +16,15 @@
         "unitPrice": 6900
       },
       {
-        "id": 3,
+        "id": "000003",
         "name": "Irodai szék",
+        "quantity": 19,
+        "unitOfMeasure": "PIECE",
+        "unitPrice": 75890
+      },
+      {
+        "id": "000004",
+        "name": "Irodai szék duplikáció",
         "quantity": 19,
         "unitOfMeasure": "PIECE",
         "unitPrice": 75890
@@ -25,25 +32,25 @@
   ],
   "invoices": [
     {
-      "id": 12345,
+      "id": "12345",
       "invoiceNumber": "ICELL-2023-03",
       "invoiceType": "NORMAL",
       "supplierTaxNumber": 31415926,
       "customerTaxNumber": 32468972,
-      "lines": [1, 2],
+      "lines": ["000001", "000002"],
       "sumPrice": 8195
     },
     {
-      "id": 54321,
+      "id": "54321",
       "invoiceNumber": "JAVA2023-03/10",
       "invoiceType": "NORMAL",
       "supplierTaxNumber": 32468972,
       "customerTaxNumber": 31415926,
-      "lines": [1, 2, 3],
+      "lines": ["000001", "000002", "000003"],
       "sumPrice": 1450105
     },
     {
-      "id": 32154,
+      "id": "32154",
       "invoiceNumber": "SIMPLE0002",
       "invoiceType": "SIMPLE",
       "supplierTaxNumber": 31415926,

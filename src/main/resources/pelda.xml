@@ -23,6 +23,13 @@
             <unitOfMeasure>PIECE</unitOfMeasure>
             <unitPrice>75890</unitPrice>
         </line>
+        <line>
+            <id>000004</id>
+            <name>Irodai szék duplikáció</name>
+            <quantity>19</quantity>
+            <unitOfMeasure>PIECE</unitOfMeasure>
+            <unitPrice>75890</unitPrice>
+        </line>
     </lines>
     <invoices>
         <invoice>

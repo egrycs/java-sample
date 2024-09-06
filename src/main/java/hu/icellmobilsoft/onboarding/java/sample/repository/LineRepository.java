@@ -4,6 +4,7 @@ import hu.icellmobilsoft.onboarding.java.sample.model.Line;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class LineRepository {
@@ -32,8 +33,12 @@ public class LineRepository {
     }
 
     public Optional<Line> findLine(String id) {
-        return lines.stream()
-                .filter(line -> line.getId().equals(id))
-                .findFirst();
+        return lines.stream().filter(line -> line.getId().equals(id)).findFirst();
+    }
+
+    public Line deleteLine(String id) {
+        Line deletedLine = this.findLine(id).orElseThrow(() -> new IllegalStateException("Entity not found!"));
+        lines.removeIf(line -> line.getId().equals(id));
+        return deletedLine;
     }
 }
