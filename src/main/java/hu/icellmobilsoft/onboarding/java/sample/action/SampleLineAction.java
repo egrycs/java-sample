@@ -1,6 +1,14 @@
 package hu.icellmobilsoft.onboarding.java.sample.action;
 
-import hu.icellmobilsoft.onboarding.java.sample.model.Invoice;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Stream;
+
 import hu.icellmobilsoft.onboarding.java.sample.model.InvoiceData;
 import hu.icellmobilsoft.onboarding.java.sample.model.Line;
 import hu.icellmobilsoft.onboarding.java.sample.repository.InvoiceRepository;
@@ -8,9 +16,7 @@ import hu.icellmobilsoft.onboarding.java.sample.repository.LineRepository;
 import hu.icellmobilsoft.onboarding.java.sample.rest.LineDeleteException;
 import hu.icellmobilsoft.onboarding.java.sample.rest.LoadDataImpl;
 import hu.icellmobilsoft.onboarding.java.sample.rest.RequestDataImpl;
-
-import java.util.List;
-import java.util.stream.Stream;
+import hu.icellmobilsoft.onboarding.java.sample.util.Validator;
 
 public class SampleLineAction {
 
@@ -24,12 +30,34 @@ public class SampleLineAction {
         this.requestDataImpl = new RequestDataImpl(invoiceRepository, lineRepository);
     }
 
-    public void loadFromXml(String xml) {
-        loadDataImpl.loadFromXml(xml);
+    public void loadFromXml(String xmlFileName, String schemaFileName) {
+        URL xmlUrl = SampleLineAction.class.getClassLoader().getResource(xmlFileName);
+        URL xsdUrl = SampleLineAction.class.getClassLoader().getResource(schemaFileName);
+        Path xmlUri;
+        Path xsdUri;
+        String xmlString;
+        try {
+            xmlUri = Paths.get(xmlUrl.toURI());
+            xsdUri = Paths.get(xsdUrl.toURI());
+            xmlString = new String(Files.readAllBytes(xmlUri));
+        } catch (IOException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        Validator.validateByXsd(xmlUri.toString(), xsdUri.toString());
+        loadDataImpl.loadFromXml(xmlString);
     }
 
-    public void loadFromJson(String json) {
-        loadDataImpl.loadFromJson(json);
+    public void loadFromJson(String jsonFileName) {
+        URL jsonUrl = SampleLineAction.class.getClassLoader().getResource(jsonFileName);
+        Path jsonUri;
+        String jsonString;
+        try {
+            jsonUri = Paths.get(jsonUrl.toURI());
+            jsonString = new String(Files.readAllBytes(jsonUri));
+        } catch (IOException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        loadDataImpl.loadFromJson(jsonString);
     }
 
     public InvoiceData getInvoiceData(String id) {

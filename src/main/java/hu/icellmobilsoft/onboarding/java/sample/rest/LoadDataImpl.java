@@ -1,5 +1,6 @@
 package hu.icellmobilsoft.onboarding.java.sample.rest;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import hu.icellmobilsoft.onboarding.java.sample.model.Invoice;
@@ -19,6 +20,7 @@ public class LoadDataImpl implements ILoadData {
     public void loadFromXml(String xml) {
         try {
             XmlMapper xmlMapper = new XmlMapper();
+            xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
             Sample sample = xmlMapper.readValue(xml, Sample.class);
 
             for (Invoice invoice : sample.getInvoices()) {

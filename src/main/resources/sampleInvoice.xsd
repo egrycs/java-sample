@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://sample.dto.onboaring.icellmobilsoft.hu/invoice"
+           xmlns="http://sample.dto.onboaring.icellmobilsoft.hu/invoice"
+           elementFormDefault="qualified">
+
+    <xs:simpleType name="SimpleText50Type">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="50"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="IdType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="32"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="UnitOfMeasureType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="KG"/>
+            <xs:enumeration value="PIECE"/>
+            <xs:enumeration value="HOUR"/>
+            <xs:enumeration value="CUSTOM"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="DecimalType">
+        <xs:restriction base="xs:decimal">
+            <xs:totalDigits value="15"/>
+            <xs:fractionDigits value="2"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="LineType">
+        <xs:sequence>
+            <xs:element name="id" type="IdType"/>
+            <xs:element name="name" type="SimpleText50Type"/>
+            <xs:element name="quantity" type="xs:int"/>
+            <xs:element name="unitOfMeasure" type="UnitOfMeasureType"/>
+            <xs:element name="customUnitOfMeasure" type="xs:string" minOccurs="0"/>
+            <xs:element name="unitPrice" type="DecimalType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LineListType">
+        <xs:sequence>
+            <xs:element name="line" type="LineType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+	
+	<xs:complexType name="InvoiceLineListType">
+        <xs:sequence>
+            <xs:element name="line" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="InvoiceType">
+        <xs:sequence>
+            <xs:element name="id" type="IdType"/>
+            <xs:element name="invoiceNumber" type="SimpleText50Type"/>
+            <xs:element name="invoiceType" type="xs:string"/>
+            <xs:element name="supplierTaxNumber" type="xs:string"/>
+            <xs:element name="customerTaxNumber" type="xs:string" minOccurs="0"/>
+            <xs:element name="lines" type="InvoiceLineListType" minOccurs="0"/>
+			<xs:element name="sumPrice" type="DecimalType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+	
+	<xs:complexType name="InvoiceListType">
+        <xs:sequence>
+            <xs:element name="invoice" type="InvoiceType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="InvoiceDataType">
+        <xs:sequence>
+            <xs:element name="invoice" type="InvoiceType"/>
+            <xs:element name="lines" type="LineListType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="InvoiceDataListType">
+        <xs:sequence>
+            <xs:element name="invoiceData" type="InvoiceDataType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="sample">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="lines" type="LineListType"/>
+                <xs:element name="invoices" type="InvoiceListType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
