@@ -3,8 +3,8 @@ package hu.icellmobilsoft.onboarding.java.sample.repository;
 import hu.icellmobilsoft.onboarding.java.sample.model.Line;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class LineRepository {
@@ -30,6 +30,10 @@ public class LineRepository {
 
     public List<Line> getAllLines() {
         return lines;
+    }
+
+    public List<Line> getLines(Collection<String> ids) {
+        return lines.stream().filter(line -> ids.contains(line.getId())).toList();
     }
 
     public Optional<Line> findLine(String id) {

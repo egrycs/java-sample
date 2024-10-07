@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<sample xmlns="http://sample.dto.onboaring.icellmobilsoft.hu/invoice"
+<sample xmlns="http://sample.dto.onboarding.icellmobilsoft.hu/invoice"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://sample.dto.onboaring.icellmobilsoft.hu/invoice sampleInvoice.xsd">
+	xsi:schemaLocation="http://sample.dto.onboarding.icellmobilsoft.hu/invoice xsd/sampleInvoice.xsd">
     <lines>
         <line>
             <id>000001</id>

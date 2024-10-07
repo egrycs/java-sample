@@ -1,27 +1,20 @@
 package hu.icellmobilsoft.onboarding.java.sample.model;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import java.math.BigDecimal;
 
 public class Line {
-    @JacksonXmlProperty(localName = "id")
     private String id;
 
-    @JacksonXmlProperty(localName = "name")
     private String name;
 
-    @JacksonXmlProperty(localName = "quantity")
     private int quantity;
 
-    @JacksonXmlProperty(localName = "unitOfMeasure")
     private String unitOfMeasure;
 
-    @JacksonXmlProperty(localName = "customUnitOfMeasure")
     private String customUnitOfMeasure;
 
-    @JacksonXmlProperty(localName = "unitPrice")
-    private double unitPrice;
+    private BigDecimal unitPrice;
 
-    // Getters and setters
     public String getId() {
         return id;
     }
@@ -62,11 +55,11 @@ public class Line {
         this.customUnitOfMeasure = customUnitOfMeasure;
     }
 
-    public double getUnitPrice() {
+    public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(double unitPrice) {
+    public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
 

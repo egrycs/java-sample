@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import hu.icellmobilsoft.onboarding.java.sample.model.InvoiceData;
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataType;
 import hu.icellmobilsoft.onboarding.java.sample.model.Line;
 import hu.icellmobilsoft.onboarding.java.sample.repository.InvoiceRepository;
 import hu.icellmobilsoft.onboarding.java.sample.repository.LineRepository;
@@ -18,7 +18,7 @@ public class SampleLineActionTest {
 
     @Test
     void testLoadFromXml() {
-        sampleLineAction.loadFromXml("pelda.xml", "sampleInvoice.xsd");
+        sampleLineAction.loadFromXml("pelda.xml", "xsd/sampleInvoice.xsd");
 
         assertFalse(lineRepository.getAllLines().isEmpty());
     }
@@ -33,7 +33,7 @@ public class SampleLineActionTest {
     @Test
     void testGetInvoiceData() {
         sampleLineAction.loadFromJson("pelda.json");
-        InvoiceData result = sampleLineAction.getInvoiceData("12345");
+        InvoiceDataType result = sampleLineAction.getInvoiceData("12345");
 
         assertNotNull(result);
     }

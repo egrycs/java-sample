@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           targetNamespace="http://sample.dto.onboaring.icellmobilsoft.hu/invoice"
-           xmlns="http://sample.dto.onboaring.icellmobilsoft.hu/invoice"
+           targetNamespace="http://sample.dto.onboarding.icellmobilsoft.hu/invoice"
+           xmlns="http://sample.dto.onboarding.icellmobilsoft.hu/invoice"
            elementFormDefault="qualified">
 
     <xs:simpleType name="SimpleText50Type">

@@ -1,11 +1,7 @@
 import hu.icellmobilsoft.onboarding.java.sample.action.SampleLineAction;
 import hu.icellmobilsoft.onboarding.java.sample.repository.InvoiceRepository;
 import hu.icellmobilsoft.onboarding.java.sample.repository.LineRepository;
-import hu.icellmobilsoft.onboarding.java.sample.util.Validator;
-
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import hu.icellmobilsoft.onboarding.java.sample.util.InvoiceDataTypeConverter;
 
 /**
  * Xml parser
@@ -13,20 +9,24 @@ import java.nio.file.Paths;
 public class App {
 
     public static void main(String[] args) throws Exception {
-        URL peldaJsonUrl = App.class.getClassLoader().getResource("pelda.json");
         SampleLineAction sampleLineAction = new SampleLineAction(new InvoiceRepository(), new LineRepository());
-        sampleLineAction.loadFromXml("pelda.xml", "sampleInvoice.xsd");
-        String peldaJsonString = new String(Files.readAllBytes(Paths.get(peldaJsonUrl.toURI())));
+        InvoiceDataTypeConverter invoiceDataTypeConverter = new InvoiceDataTypeConverter();
+        sampleLineAction.loadFromXml("pelda.xml", "xsd/sampleInvoice.xsd");
         // sampleLineAction.loadFromJson("pelda.json");
-        // System.out.println(sampleLineAction.getAllInvoicesData());
-        System.out.println(sampleLineAction.getInvoiceData("12345"));
-        // System.out.println(sampleLineAction.getInvoiceData("54321"));
-        // System.out.println(sampleLineAction.getInvoiceData("32154"));
-        // System.out.println(sampleLineAction.queryInvoicesData("SIMMPLE0002", null));
-        // System.out.println(sampleLineAction.queryInvoicesData(null, "NORMAL"));
-        // System.out.println(sampleLineAction.deleteLine("000003")); // Entity not found!
+        sampleLineAction.getAllInvoicesData()
+                .getInvoiceData()
+                .forEach(invoiceDataType -> System.out.println(invoiceDataTypeConverter.convert(invoiceDataType)));
+        // System.out.println(invoiceDataTypeConverter.convert(sampleLineAction.getInvoiceData("12345")));
+        // System.out.println(invoiceDataTypeConverter.convert(sampleLineAction.getInvoiceData("54321")));
+        // System.out.println(invoiceDataTypeConverter.convert(sampleLineAction.getInvoiceData("32154")));
+        // sampleLineAction.queryInvoicesData("SIMMPLE0002", null)
+        //         .getInvoiceData()
+        //         .forEach(invoiceDataType -> System.out.println(invoiceDataTypeConverter.convert(invoiceDataType)));
+        // sampleLineAction.queryInvoicesData(null, "NORMAL")
+        //         .getInvoiceData()
+        //         .forEach(invoiceDataType -> System.out.println(invoiceDataTypeConverter.convert(invoiceDataType)));
         // System.out.println(sampleLineAction.deleteLine("000003")); // LineDeleteException
         // System.out.println(sampleLineAction.deleteLine("000004"));
-        // System.out.println(sampleLineAction.deleteLine("000004"));
+        // System.out.println(sampleLineAction.deleteLine("000004")); // Entity not found!
     }
 }

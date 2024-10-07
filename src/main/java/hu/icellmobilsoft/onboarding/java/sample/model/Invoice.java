@@ -1,37 +1,24 @@
 package hu.icellmobilsoft.onboarding.java.sample.model;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class Invoice {
 
-    @JacksonXmlProperty(localName = "id")
     private String id;
 
-    @JacksonXmlProperty(localName = "invoiceNumber")
     private String invoiceNumber;
 
-    @JacksonXmlProperty(localName = "invoiceType")
     private String invoiceType;
 
-    @JacksonXmlProperty(localName = "supplierTaxNumber")
     private String supplierTaxNumber;
 
-    @JacksonXmlProperty(localName = "customerTaxNumber")
     private String customerTaxNumber;
 
+    private BigDecimal sumPrice;
 
-    @JacksonXmlProperty(localName = "sumPrice")
-    private double sumPrice;
-
-    @JacksonXmlElementWrapper(localName = "lines")
-    @JacksonXmlProperty(localName = "line")
     private List<String> lines;
 
-    // Getters and setters
     public String getId() {
         return id;
     }
@@ -72,11 +59,11 @@ public class Invoice {
         this.customerTaxNumber = customerTaxNumber;
     }
 
-    public double getSumPrice() {
+    public BigDecimal getSumPrice() {
         return sumPrice;
     }
 
-    public void setSumPrice(double sumPrice) {
+    public void setSumPrice(BigDecimal sumPrice) {
         this.sumPrice = sumPrice;
     }
 

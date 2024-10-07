@@ -1,11 +1,10 @@
 package hu.icellmobilsoft.onboarding.java.sample.rest;
 
-import hu.icellmobilsoft.onboarding.java.sample.model.InvoiceData;
-
-import java.util.List;
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataListType;
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataType;
 
 public interface IRequestData {
-    InvoiceData getInvoiceData(String id);
+    InvoiceDataType getInvoiceData(String id);
 
-    List<InvoiceData> getAllInvoicesData();
+    InvoiceDataListType getAllInvoicesData();
 }

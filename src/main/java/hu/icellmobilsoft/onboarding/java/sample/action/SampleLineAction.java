@@ -6,10 +6,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Stream;
 
-import hu.icellmobilsoft.onboarding.java.sample.model.InvoiceData;
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataListType;
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataType;
 import hu.icellmobilsoft.onboarding.java.sample.model.Line;
 import hu.icellmobilsoft.onboarding.java.sample.repository.InvoiceRepository;
 import hu.icellmobilsoft.onboarding.java.sample.repository.LineRepository;
@@ -20,12 +19,10 @@ import hu.icellmobilsoft.onboarding.java.sample.util.Validator;
 
 public class SampleLineAction {
 
-    private LineRepository lineRepository;
     private LoadDataImpl loadDataImpl;
     private RequestDataImpl requestDataImpl;
 
     public SampleLineAction(InvoiceRepository invoiceRepository, LineRepository lineRepository) {
-        this.lineRepository = lineRepository;
         this.loadDataImpl = new LoadDataImpl(invoiceRepository, lineRepository);
         this.requestDataImpl = new RequestDataImpl(invoiceRepository, lineRepository);
     }
@@ -60,33 +57,17 @@ public class SampleLineAction {
         loadDataImpl.loadFromJson(jsonString);
     }
 
-    public InvoiceData getInvoiceData(String id) {
+    public InvoiceDataType getInvoiceData(String id) {
         return requestDataImpl.getInvoiceData(id);
     }
 
-    public List<InvoiceData> getAllInvoicesData() {
-        return requestDataImpl.getAllInvoicesData();
+    public InvoiceDataListType getAllInvoicesData() { return requestDataImpl.getAllInvoicesData(); }
+
+    public InvoiceDataListType queryInvoicesData(String invoiceNumber, String invoiceType) {
+        return requestDataImpl.queryInvoicesData(invoiceNumber, invoiceType);
     }
 
-    public List<InvoiceData> queryInvoicesData(String invoiceNumber, String invoiceType) {
-        return this.getAllInvoicesData()
-                .stream()
-                .filter(
-                        invoiceData -> invoiceData.getInvoice().getInvoiceNumber().equals(invoiceNumber)
-                                || invoiceData.getInvoice().getInvoiceType().equals(invoiceType))
-                .toList();
-    }
-
-    public Line deleteLine(String id) throws LineDeleteException { // LineDeleteException, EntityNotFoundException
-        if (isLineAssignedToInvoice(id)) {
-            throw new LineDeleteException("The line with id " + id + " is assigned to an invoice and cannot be deleted.");
-        }
-        return lineRepository.deleteLine(id);
-    }
-
-    private boolean isLineAssignedToInvoice(String lineId) {
-        return this.getAllInvoicesData().stream().flatMap(invoiceData ->
-            invoiceData.getInvoice().getLines() == null ? Stream.of() : invoiceData.getInvoice().getLines().stream()
-        ).anyMatch(line -> line.equals(lineId));
+    public Line deleteLine(String id) throws LineDeleteException {
+        return requestDataImpl.deleteLine(id);
     }
 }
