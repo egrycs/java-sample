@@ -12,17 +12,17 @@ import org.xml.sax.SAXException;
 
 public class Validator {
 
-    public static void validateByXsd(String xmlUri, String xsdUri) {
+    public static void validateByXsd(File xml, File xsd) {
         try {
             // XSD séma betöltése
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(new File(xsdUri));
+            Schema schema = factory.newSchema(xsd);
 
             // Validator létrehozása
             javax.xml.validation.Validator validator = schema.newValidator();
 
             // XML fájl validálása
-            validator.validate(new StreamSource(new File(xmlUri)));
+            validator.validate(new StreamSource(xml));
             System.out.println("XML file is valid against the schema.");
 
         } catch (SAXException e) {

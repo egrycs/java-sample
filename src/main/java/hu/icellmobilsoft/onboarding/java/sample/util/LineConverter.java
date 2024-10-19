@@ -1,11 +1,8 @@
 package hu.icellmobilsoft.onboarding.java.sample.util;
 
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceLineListType;
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceType;
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.UnitOfMeasureType;
-import hu.icellmobilsoft.onboarding.java.sample.model.Invoice;
-import hu.icellmobilsoft.onboarding.java.sample.model.Line;
 import hu.icellmobilsoft.onboarding.dto.sample.invoice.LineType;
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.UnitOfMeasureType;
+import hu.icellmobilsoft.onboarding.java.sample.model.Line;
 
 public class LineConverter {
 

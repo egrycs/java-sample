@@ -1,11 +1,12 @@
 package hu.icellmobilsoft.onboarding.java.sample.repository;
 
-import hu.icellmobilsoft.onboarding.java.sample.model.Line;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
+import hu.icellmobilsoft.onboarding.java.sample.model.Line;
+import hu.icellmobilsoft.onboarding.java.sample.util.BaseException;
 
 public class LineRepository {
     private List<Line> lines;
@@ -14,7 +15,7 @@ public class LineRepository {
         this.lines = new ArrayList<>();
     }
 
-    public void saveLine(Line line) {
+    public Line saveLine(Line line) {
         Optional<Line> existingLine = findLine(line.getId());
         if (existingLine.isPresent()) {
             Line currentLine = existingLine.get();
@@ -24,8 +25,15 @@ public class LineRepository {
             currentLine.setCustomUnitOfMeasure(line.getCustomUnitOfMeasure());
             currentLine.setUnitPrice(line.getUnitPrice());
         } else {
+            if (line.getId() == null) {
+                String lastLineId = lines.get(lines.size() - 1).getId();
+                int nextLineId = Integer.parseInt(lastLineId) + 1;
+                line.setId(String.format("%06d", nextLineId));
+            }
             lines.add(line);
         }
+
+        return line;
     }
 
     public List<Line> getAllLines() {
@@ -40,8 +48,8 @@ public class LineRepository {
         return lines.stream().filter(line -> line.getId().equals(id)).findFirst();
     }
 
-    public Line deleteLine(String id) {
-        Line deletedLine = this.findLine(id).orElseThrow(() -> new IllegalStateException("Entity not found!"));
+    public Line deleteLine(String id) throws BaseException {
+        Line deletedLine = this.findLine(id).orElseThrow(() -> new BaseException("Entity not found!"));
         lines.removeIf(line -> line.getId().equals(id));
         return deletedLine;
     }

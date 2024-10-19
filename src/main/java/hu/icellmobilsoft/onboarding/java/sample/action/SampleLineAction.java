@@ -1,21 +1,24 @@
 package hu.icellmobilsoft.onboarding.java.sample.action;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataListType;
 import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataType;
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.LineListType;
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.LineType;
 import hu.icellmobilsoft.onboarding.java.sample.model.Line;
 import hu.icellmobilsoft.onboarding.java.sample.repository.InvoiceRepository;
 import hu.icellmobilsoft.onboarding.java.sample.repository.LineRepository;
-import hu.icellmobilsoft.onboarding.java.sample.rest.LineDeleteException;
 import hu.icellmobilsoft.onboarding.java.sample.rest.LoadDataImpl;
 import hu.icellmobilsoft.onboarding.java.sample.rest.RequestDataImpl;
-import hu.icellmobilsoft.onboarding.java.sample.util.Validator;
+import hu.icellmobilsoft.onboarding.java.sample.util.*;
 
 public class SampleLineAction {
 
@@ -28,19 +31,27 @@ public class SampleLineAction {
     }
 
     public void loadFromXml(String xmlFileName, String schemaFileName) {
-        URL xmlUrl = SampleLineAction.class.getClassLoader().getResource(xmlFileName);
-        URL xsdUrl = SampleLineAction.class.getClassLoader().getResource(schemaFileName);
-        Path xmlUri;
-        Path xsdUri;
+        InputStream xmlStream = SampleLineAction.class.getClassLoader().getResourceAsStream(xmlFileName);
+        InputStream xsdStream = SampleLineAction.class.getClassLoader().getResourceAsStream(schemaFileName);
         String xmlString;
+        File xml;
+        File xsd;
         try {
-            xmlUri = Paths.get(xmlUrl.toURI());
-            xsdUri = Paths.get(xsdUrl.toURI());
-            xmlString = new String(Files.readAllBytes(xmlUri));
-        } catch (IOException | URISyntaxException e) {
+            if (xmlStream == null) {
+                throw new FileNotFoundException("Cannot find file: " + xmlFileName);
+            }
+            if (xsdStream == null) {
+                throw new FileNotFoundException("Cannot find file: " + schemaFileName);
+            }
+            byte[] xmlByteArray = InputStreamConverter.convert(xmlStream);
+            byte[] xsdByteArray = InputStreamConverter.convert(xsdStream);
+            xmlString = new String(xmlByteArray, StandardCharsets.UTF_8);
+            xml = ByteArrayToFileConverter.convert(xmlByteArray, xmlFileName);
+            xsd = ByteArrayToFileConverter.convert(xsdByteArray, schemaFileName);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        Validator.validateByXsd(xmlUri.toString(), xsdUri.toString());
+        Validator.validateByXsd(xml, xsd);
         loadDataImpl.loadFromXml(xmlString);
     }
 
@@ -67,7 +78,19 @@ public class SampleLineAction {
         return requestDataImpl.queryInvoicesData(invoiceNumber, invoiceType);
     }
 
-    public Line deleteLine(String id) throws LineDeleteException {
+    public LineType getLine(String id) throws BaseException {
+        return requestDataImpl.getLine(id);
+    }
+
+    public LineListType getAllLine() {
+        return requestDataImpl.getAllLine();
+    }
+
+    public LineType saveLine(LineType line) {
+        return requestDataImpl.saveLine(line);
+    }
+
+    public LineType deleteLine(String id) throws BaseException {
         return requestDataImpl.deleteLine(id);
     }
 }

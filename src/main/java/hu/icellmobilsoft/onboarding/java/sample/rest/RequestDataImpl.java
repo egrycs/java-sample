@@ -7,23 +7,29 @@ import java.util.stream.Stream;
 
 import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataListType;
 import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataType;
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.LineListType;
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.LineType;
 import hu.icellmobilsoft.onboarding.java.sample.model.Invoice;
 import hu.icellmobilsoft.onboarding.java.sample.model.Line;
 import hu.icellmobilsoft.onboarding.java.sample.repository.InvoiceRepository;
 import hu.icellmobilsoft.onboarding.java.sample.repository.LineRepository;
+import hu.icellmobilsoft.onboarding.java.sample.util.BaseException;
 import hu.icellmobilsoft.onboarding.java.sample.util.InvoiceDataTypeConverter;
+import hu.icellmobilsoft.onboarding.java.sample.util.LineConverter;
 
 public class RequestDataImpl implements IRequestData {
 
     private InvoiceRepository invoiceRepository;
     private LineRepository lineRepository;
 
+    private LineConverter lineConverter;
     private InvoiceDataTypeConverter invoiceDataTypeConverter;
 
     public RequestDataImpl(InvoiceRepository invoiceRepository, LineRepository lineRepository) {
-        invoiceDataTypeConverter = new InvoiceDataTypeConverter();
         this.invoiceRepository = invoiceRepository;
         this.lineRepository = lineRepository;
+        lineConverter = new LineConverter();
+        invoiceDataTypeConverter = new InvoiceDataTypeConverter();
     }
 
     public InvoiceDataType getInvoiceData(String id) {
@@ -52,11 +58,31 @@ public class RequestDataImpl implements IRequestData {
         return invoiceDataListType;
     }
 
-    public Line deleteLine(String id) throws LineDeleteException {
-        if (isLineAssignedToInvoice(id)) {
-            throw new LineDeleteException("The line with id " + id + " is assigned to an invoice and cannot be deleted.");
+    public LineType getLine(String id) throws BaseException {
+        Optional<Line> line = lineRepository.findLine(id);
+        if (line.isEmpty()) {
+            throw new BaseException("Entity with id " + id + " not found.");
         }
-        return lineRepository.deleteLine(id);
+
+        return lineConverter.convert(line.get());
+    }
+
+    public LineListType getAllLine() {
+        LineListType lineListType = new LineListType();
+        lineRepository.getAllLines().forEach(line -> lineListType.getLine().add(lineConverter.convert(line)));
+
+        return lineListType;
+    }
+
+    public LineType saveLine(LineType line) {
+        return lineConverter.convert(lineRepository.saveLine(lineConverter.convert(line)));
+    }
+
+    public LineType deleteLine(String id) throws BaseException {
+        if (isLineAssignedToInvoice(id)) {
+            throw new BaseException("The line with id " + id + " is assigned to an invoice and cannot be deleted.");
+        }
+        return lineConverter.convert(lineRepository.deleteLine(id));
     }
 
     private List<Line> getInvoiceLines(Invoice invoice) {

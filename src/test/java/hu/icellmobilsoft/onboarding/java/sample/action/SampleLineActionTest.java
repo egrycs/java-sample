@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataType;
-import hu.icellmobilsoft.onboarding.java.sample.model.Line;
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.LineType;
 import hu.icellmobilsoft.onboarding.java.sample.repository.InvoiceRepository;
 import hu.icellmobilsoft.onboarding.java.sample.repository.LineRepository;
-import hu.icellmobilsoft.onboarding.java.sample.rest.LineDeleteException;
+import hu.icellmobilsoft.onboarding.java.sample.util.BaseException;
 
 public class SampleLineActionTest {
 
@@ -39,9 +39,9 @@ public class SampleLineActionTest {
     }
 
     @Test
-    void testDeleteLineSuccess() throws LineDeleteException {
+    void testDeleteLineSuccess() throws BaseException {
         sampleLineAction.loadFromJson("pelda.json");
-        Line deletedLine = sampleLineAction.deleteLine("000004");
+        LineType deletedLine = sampleLineAction.deleteLine("000004");
 
         assertFalse(lineRepository.getAllLines().isEmpty());
         assertNotNull(deletedLine);
@@ -50,7 +50,7 @@ public class SampleLineActionTest {
     @Test
     void testDeleteLineAssignedToInvoice() {
         sampleLineAction.loadFromJson("pelda.json");
-        LineDeleteException thrown = assertThrows(LineDeleteException.class, () -> {
+        BaseException thrown = assertThrows(BaseException.class, () -> {
             sampleLineAction.deleteLine("000001");
         });
 
