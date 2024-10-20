@@ -1,24 +1,25 @@
 package hu.icellmobilsoft.onboarding.java.sample.action;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataListType;
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataType;
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.LineListType;
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.LineType;
-import hu.icellmobilsoft.onboarding.java.sample.model.Line;
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.*;
 import hu.icellmobilsoft.onboarding.java.sample.repository.InvoiceRepository;
 import hu.icellmobilsoft.onboarding.java.sample.repository.LineRepository;
 import hu.icellmobilsoft.onboarding.java.sample.rest.LoadDataImpl;
 import hu.icellmobilsoft.onboarding.java.sample.rest.RequestDataImpl;
-import hu.icellmobilsoft.onboarding.java.sample.util.*;
+import hu.icellmobilsoft.onboarding.java.sample.util.BaseException;
+import hu.icellmobilsoft.onboarding.java.sample.util.ByteArrayToFileConverter;
+import hu.icellmobilsoft.onboarding.java.sample.util.InputStreamConverter;
+import hu.icellmobilsoft.onboarding.java.sample.util.Validator;
 
 public class SampleLineAction {
 
@@ -68,22 +69,12 @@ public class SampleLineAction {
         loadDataImpl.loadFromJson(jsonString);
     }
 
-    public InvoiceDataType getInvoiceData(String id) {
-        return requestDataImpl.getInvoiceData(id);
-    }
-
-    public InvoiceDataListType getAllInvoicesData() { return requestDataImpl.getAllInvoicesData(); }
-
-    public InvoiceDataListType queryInvoicesData(String invoiceNumber, String invoiceType) {
-        return requestDataImpl.queryInvoicesData(invoiceNumber, invoiceType);
-    }
-
     public LineType getLine(String id) throws BaseException {
         return requestDataImpl.getLine(id);
     }
 
-    public LineListType getAllLine() {
-        return requestDataImpl.getAllLine();
+    public LineListType lineQuery(LineListQueryType lineListQuery) throws BaseException {
+        return requestDataImpl.queryLine(lineListQuery);
     }
 
     public LineType saveLine(LineType line) {
@@ -92,5 +83,29 @@ public class SampleLineAction {
 
     public LineType deleteLine(String id) throws BaseException {
         return requestDataImpl.deleteLine(id);
+    }
+
+    public InvoiceDataType getInvoiceData(String id) throws BaseException {
+        return requestDataImpl.getInvoiceData(id);
+    }
+
+    public InvoiceDataListType getAllInvoiceData() {
+        return requestDataImpl.getAllInvoiceData();
+    }
+
+    public InvoiceDataListType invoiceDataQuery(InvoiceDataListQueryType invoiceListQuery) throws BaseException {
+        return requestDataImpl.queryInvoicesData(invoiceListQuery);
+    }
+
+    public InvoiceDataType saveInvoiceData(InvoiceDataType invoiceData) {
+        return requestDataImpl.saveInvoiceData(invoiceData);
+    }
+
+    public InvoiceDataType modifyInvoiceData(InvoiceDataType invoiceData) {
+        return requestDataImpl.modifyInvoiceData(invoiceData);
+    }
+
+    public InvoiceDataType deleteInvoice(String id) throws BaseException {
+        return requestDataImpl.deleteInvoice(id);
     }
 }

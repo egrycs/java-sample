@@ -44,13 +44,23 @@ public class LineRepository {
         return lines.stream().filter(line -> ids.contains(line.getId())).toList();
     }
 
+    public Line getLine(String id) throws BaseException {
+        Optional<Line> optionalLine = findLine(id);
+        if (optionalLine.isEmpty()) {
+            throw new BaseException("Entity not found!");
+        }
+
+        return optionalLine.get();
+    }
+
     public Optional<Line> findLine(String id) {
-        return lines.stream().filter(line -> line.getId().equals(id)).findFirst();
+        return lines.stream().filter(invoice -> invoice.getId().equals(id)).findFirst();
     }
 
     public Line deleteLine(String id) throws BaseException {
-        Line deletedLine = this.findLine(id).orElseThrow(() -> new BaseException("Entity not found!"));
+        Line deletedline = getLine(id);
         lines.removeIf(line -> line.getId().equals(id));
-        return deletedLine;
+
+        return deletedline;
     }
 }

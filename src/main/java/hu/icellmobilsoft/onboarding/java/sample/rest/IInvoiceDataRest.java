@@ -3,43 +3,38 @@ package hu.icellmobilsoft.onboarding.java.sample.rest;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.LineListQueryType;
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.LineListType;
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.LineType;
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataListQueryType;
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataListType;
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataType;
 import hu.icellmobilsoft.onboarding.java.sample.util.BaseException;
 
-@Path("/line")
-public interface ILineRest {
-
-    @GET
-    @Path("/hello")
-    @Produces(MediaType.TEXT_PLAIN)
-    String getHello();
+@Path("/invoice")
+public interface IInvoiceDataRest {
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    LineType getLine(@PathParam("id") String id) throws BaseException;
+    InvoiceDataType getInvoiceData(@PathParam("id") String id) throws BaseException;
 
     @POST
     @Path("/query")
     @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    LineListType lineQuery(LineListQueryType lineListQuery) throws BaseException;
+    InvoiceDataListType invoiceDataQuery(InvoiceDataListQueryType invoiceListQuery) throws BaseException;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    LineType postLine(LineType line);
+    InvoiceDataType postInvoiceData(InvoiceDataType invoiceData);
 
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    LineType putLine(@PathParam("id") String id, LineType line) throws BaseException;
+    InvoiceDataType putInvoiceData(@PathParam("id") String id, InvoiceDataType invoiceData) throws BaseException;
 
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    LineType deleteLine(@PathParam("id") String id) throws BaseException;
+    InvoiceDataType deleteInvoice(@PathParam("id") String id) throws BaseException;
 }

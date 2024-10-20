@@ -1,8 +1,9 @@
 package hu.icellmobilsoft.onboarding.java.sample.util;
 
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataType;
 import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceLineListType;
-import hu.icellmobilsoft.onboarding.java.sample.model.Invoice;
 import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceType;
+import hu.icellmobilsoft.onboarding.java.sample.model.Invoice;
 
 public class InvoiceConverter {
 
@@ -38,5 +39,11 @@ public class InvoiceConverter {
         invoiceType.setSumPrice(invoice.getSumPrice());
 
         return invoiceType;
+    }
+
+    public Invoice convert(InvoiceDataType invoiceDataType) {
+        InvoiceConverter invoiceConverter = new InvoiceConverter();
+
+        return invoiceConverter.convert(invoiceDataType.getInvoice());
     }
 }

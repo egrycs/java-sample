@@ -31,7 +31,7 @@ public class SampleLineActionTest {
     }
 
     @Test
-    void testGetInvoiceData() {
+    void testGetInvoiceData() throws BaseException {
         sampleLineAction.loadFromJson("pelda.json");
         InvoiceDataType result = sampleLineAction.getInvoiceData("12345");
 

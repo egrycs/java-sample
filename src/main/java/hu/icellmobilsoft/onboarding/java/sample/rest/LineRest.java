@@ -1,5 +1,6 @@
 package hu.icellmobilsoft.onboarding.java.sample.rest;
 
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.LineListQueryType;
 import hu.icellmobilsoft.onboarding.dto.sample.invoice.LineListType;
 import hu.icellmobilsoft.onboarding.dto.sample.invoice.LineType;
 import hu.icellmobilsoft.onboarding.java.sample.JavaSampleApp;
@@ -22,8 +23,8 @@ public class LineRest implements ILineRest {
         return sampleLineAction.getLine(id);
     };
 
-    public LineListType getAllLines() {
-        return sampleLineAction.getAllLine();
+    public LineListType lineQuery(LineListQueryType lineListQuery) throws BaseException {
+        return sampleLineAction.lineQuery(lineListQuery);
     };
 
     public LineType postLine(LineType line) {
@@ -32,7 +33,7 @@ public class LineRest implements ILineRest {
 
     public LineType putLine(String id, LineType line) throws BaseException {
         getLine(id);
-        line.setId(id);
+        line.setId(id); // a payload-ban az id nem szerepel, ezért külön be kell állítani
         return sampleLineAction.saveLine(line);
     }
 

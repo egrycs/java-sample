@@ -87,6 +87,20 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="LineListQueryType">
+        <xs:sequence>
+            <xs:element name="name" type="SimpleText50Type" minOccurs="0"/>
+            <xs:element name="unitOfMeasure" type="UnitOfMeasureType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="InvoiceDataListQueryType">
+        <xs:sequence>
+            <xs:element name="invoiceNumber" type="SimpleText50Type" minOccurs="0"/>
+            <xs:element name="invoiceType" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:element name="sample">
         <xs:complexType>
             <xs:sequence>
