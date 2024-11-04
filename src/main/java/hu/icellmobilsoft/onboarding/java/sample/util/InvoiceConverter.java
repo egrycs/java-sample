@@ -40,10 +40,4 @@ public class InvoiceConverter {
 
         return invoiceType;
     }
-
-    public Invoice convert(InvoiceDataType invoiceDataType) {
-        InvoiceConverter invoiceConverter = new InvoiceConverter();
-
-        return invoiceConverter.convert(invoiceDataType.getInvoice());
-    }
 }

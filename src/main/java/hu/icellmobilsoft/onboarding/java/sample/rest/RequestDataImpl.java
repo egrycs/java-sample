@@ -125,7 +125,6 @@ public class RequestDataImpl implements IRequestData {
 
     public InvoiceDataType saveInvoiceData(InvoiceDataType invoiceData) {
         Invoice invoice = invoiceConverter.convert(invoiceData.getInvoice());
-        invoice.setLines(Collections.emptyList());
         List<String> lineIds = new ArrayList<>();
         invoiceData.getLines().getLine().forEach(lineType -> lineIds.add(lineRepository.saveLine(lineConverter.convert(lineType)).getId()));
         invoice.setLines(lineIds);
