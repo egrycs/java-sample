@@ -17,6 +17,13 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="SourceType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="JSON"/>
+            <xs:enumeration value="XML"/>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="UnitOfMeasureType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="KG"/>
@@ -101,12 +108,206 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="SampleType">
+        <xs:sequence>
+            <xs:element name="lines" type="LineListType"/>
+            <xs:element name="invoices" type="InvoiceListType"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:element name="sample">
         <xs:complexType>
-            <xs:sequence>
-                <xs:element name="lines" type="LineListType"/>
-                <xs:element name="invoices" type="InvoiceListType"/>
-            </xs:sequence>
+            <xs:complexContent>
+                <xs:extension base="SampleType"/>
+            </xs:complexContent>
         </xs:complexType>
     </xs:element>
+
+    <xs:complexType name="BaseRequestType">
+    </xs:complexType>
+
+    <xs:complexType name="BaseResponseType">
+    </xs:complexType>
+
+    <!-- REQUEST/RESPONSE ELEMENTS -->
+    <xs:element name="SampleRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SampleRequestType"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="InitDataRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="InitDataRequestType"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="LineRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="LineRequestType"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="LineResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="LineResponseType"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="LineListQueryRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="LineListQueryRequestType"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="LineListQueryResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="LineListQueryResponseType"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="InvoiceDataRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="InvoiceDataRequestType"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="InvoiceDataResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="InvoiceDataResponseType"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="InvoiceDataListQueryRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="InvoiceDataListQueryRequestType"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="InvoiceDataListQueryResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="InvoiceDataListQueryResponseType"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- REQUEST/RESPONSE COMPLEX TYPES -->
+    <xs:complexType name="SampleRequestType">
+        <xs:complexContent>
+            <xs:extension base="BaseRequestType">
+                <xs:sequence>
+                    <xs:element name="sample" type="SampleType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="LineRequestType">
+        <xs:complexContent>
+            <xs:extension base="BaseRequestType">
+                <xs:sequence>
+                    <xs:element name="line" type="LineType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="InitDataRequestType">
+        <xs:complexContent>
+            <xs:extension base="BaseRequestType">
+                <xs:sequence>
+                    <xs:element name="source" type="SourceType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="LineResponseType">
+        <xs:complexContent>
+            <xs:extension base="BaseResponseType">
+                <xs:sequence>
+                    <xs:element name="line" type="LineType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="LineListQueryRequestType">
+        <xs:complexContent>
+            <xs:extension base="BaseRequestType">
+                <xs:sequence>
+                    <xs:element name="queryParam" type="LineListQueryType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="LineListQueryResponseType">
+        <xs:complexContent>
+            <xs:extension base="BaseResponseType">
+                <xs:sequence>
+                    <xs:element name="lines" type="LineListType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="InvoiceDataRequestType">
+        <xs:complexContent>
+            <xs:extension base="BaseRequestType">
+                <xs:sequence>
+                    <xs:element name="invoiceData" type="InvoiceDataType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="InvoiceDataResponseType">
+        <xs:complexContent>
+            <xs:extension base="BaseResponseType">
+                <xs:sequence>
+                    <xs:element name="invoiceData" type="InvoiceDataType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="InvoiceDataListQueryRequestType">
+        <xs:complexContent>
+            <xs:extension base="BaseRequestType">
+                <xs:sequence>
+                    <xs:element name="queryParam" type="InvoiceDataListQueryType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="InvoiceDataListQueryResponseType">
+        <xs:complexContent>
+            <xs:extension base="BaseResponseType">
+                <xs:sequence>
+                    <xs:element name="invoices" type="InvoiceDataListType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
 </xs:schema>

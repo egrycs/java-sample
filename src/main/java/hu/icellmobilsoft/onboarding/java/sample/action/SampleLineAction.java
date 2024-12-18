@@ -1,72 +1,66 @@
 package hu.icellmobilsoft.onboarding.java.sample.action;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
+import jakarta.enterprise.inject.Model;
+import jakarta.inject.Inject;
 
 import hu.icellmobilsoft.onboarding.dto.sample.invoice.*;
-import hu.icellmobilsoft.onboarding.java.sample.repository.InvoiceRepository;
-import hu.icellmobilsoft.onboarding.java.sample.repository.LineRepository;
-import hu.icellmobilsoft.onboarding.java.sample.rest.LoadDataImpl;
-import hu.icellmobilsoft.onboarding.java.sample.rest.RequestDataImpl;
-import hu.icellmobilsoft.onboarding.java.sample.util.BaseException;
-import hu.icellmobilsoft.onboarding.java.sample.util.ByteArrayToFileConverter;
-import hu.icellmobilsoft.onboarding.java.sample.util.InputStreamConverter;
-import hu.icellmobilsoft.onboarding.java.sample.util.Validator;
+import hu.icellmobilsoft.onboarding.java.sample.exception.BaseException;
+import hu.icellmobilsoft.onboarding.java.sample.service.LoadDataImpl;
+import hu.icellmobilsoft.onboarding.java.sample.service.RequestDataImpl;
 
+@Model
 public class SampleLineAction {
 
+    @Inject
     private LoadDataImpl loadDataImpl;
+    @Inject
     private RequestDataImpl requestDataImpl;
 
-    public SampleLineAction(InvoiceRepository invoiceRepository, LineRepository lineRepository) {
-        this.loadDataImpl = new LoadDataImpl(invoiceRepository, lineRepository);
-        this.requestDataImpl = new RequestDataImpl(invoiceRepository, lineRepository);
+    public String loadFromXml(String xmlFileName, String schemaFileName) {
+        String msg;
+
+        if (requestDataImpl.isInvoiceDataTableEmpty()) {
+            InputStream xmlStream = SampleLineAction.class.getClassLoader().getResourceAsStream(xmlFileName);
+            try {
+                if (xmlStream == null) {
+                    throw new FileNotFoundException("Cannot find file: " + xmlFileName);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            loadDataImpl.loadFromXml(xmlStream, schemaFileName);
+
+            msg = "The data has been loaded.";
+        } else {
+            msg = "The data has already been uploaded previously.";
+        }
+
+        return msg;
     }
 
-    public void loadFromXml(String xmlFileName, String schemaFileName) {
-        InputStream xmlStream = SampleLineAction.class.getClassLoader().getResourceAsStream(xmlFileName);
-        InputStream xsdStream = SampleLineAction.class.getClassLoader().getResourceAsStream(schemaFileName);
-        String xmlString;
-        File xml;
-        File xsd;
-        try {
-            if (xmlStream == null) {
-                throw new FileNotFoundException("Cannot find file: " + xmlFileName);
-            }
-            if (xsdStream == null) {
-                throw new FileNotFoundException("Cannot find file: " + schemaFileName);
-            }
-            byte[] xmlByteArray = InputStreamConverter.convert(xmlStream);
-            byte[] xsdByteArray = InputStreamConverter.convert(xsdStream);
-            xmlString = new String(xmlByteArray, StandardCharsets.UTF_8);
-            xml = ByteArrayToFileConverter.convert(xmlByteArray, xmlFileName);
-            xsd = ByteArrayToFileConverter.convert(xsdByteArray, schemaFileName);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        Validator.validateByXsd(xml, xsd);
-        loadDataImpl.loadFromXml(xmlString);
-    }
+    public String loadFromJson(String jsonFileName, String schemaFileName) {
+        String msg;
 
-    public void loadFromJson(String jsonFileName) {
-        URL jsonUrl = SampleLineAction.class.getClassLoader().getResource(jsonFileName);
-        Path jsonUri;
-        String jsonString;
-        try {
-            jsonUri = Paths.get(jsonUrl.toURI());
-            jsonString = new String(Files.readAllBytes(jsonUri));
-        } catch (IOException | URISyntaxException e) {
-            throw new RuntimeException(e);
+        if (requestDataImpl.isInvoiceDataTableEmpty()) {
+            InputStream jsonStream = SampleLineAction.class.getClassLoader().getResourceAsStream(jsonFileName);
+            try {
+                if (jsonStream == null) {
+                    throw new FileNotFoundException("Cannot find file: " + jsonFileName);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            loadDataImpl.loadFromJson(jsonStream, schemaFileName);
+
+            msg = "The data has been loaded.";
+        } else {
+            msg = "The data has already been uploaded previously.";
         }
-        loadDataImpl.loadFromJson(jsonString);
+
+        return msg;
     }
 
     public LineType getLine(String id) throws BaseException {
@@ -93,16 +87,12 @@ public class SampleLineAction {
         return requestDataImpl.getAllInvoiceData();
     }
 
-    public InvoiceDataListType invoiceDataQuery(InvoiceDataListQueryType invoiceListQuery) throws BaseException {
-        return requestDataImpl.queryInvoicesData(invoiceListQuery);
+    public InvoiceDataListType invoiceDataQuery(InvoiceDataListQueryType invoiceDataListQuery) throws BaseException {
+        return requestDataImpl.queryInvoicesData(invoiceDataListQuery);
     }
 
     public InvoiceDataType saveInvoiceData(InvoiceDataType invoiceData) {
         return requestDataImpl.saveInvoiceData(invoiceData);
-    }
-
-    public InvoiceDataType modifyInvoiceData(InvoiceDataType invoiceData) {
-        return requestDataImpl.modifyInvoiceData(invoiceData);
     }
 
     public InvoiceDataType deleteInvoice(String id) throws BaseException {

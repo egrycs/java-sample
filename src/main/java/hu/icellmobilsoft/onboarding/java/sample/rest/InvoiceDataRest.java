@@ -1,39 +1,56 @@
 package hu.icellmobilsoft.onboarding.java.sample.rest;
 
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataListQueryType;
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataListType;
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataType;
-import hu.icellmobilsoft.onboarding.java.sample.JavaSampleApp;
-import hu.icellmobilsoft.onboarding.java.sample.action.SampleLineAction;
-import hu.icellmobilsoft.onboarding.java.sample.util.BaseException;
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.*;
+import jakarta.enterprise.inject.Model;
+import jakarta.inject.Inject;
 
+import hu.icellmobilsoft.onboarding.java.sample.action.SampleLineAction;
+import hu.icellmobilsoft.onboarding.java.sample.exception.BaseException;
+
+@Model
 public class InvoiceDataRest implements IInvoiceDataRest {
 
+    @Inject
     private SampleLineAction sampleLineAction;
 
-    public InvoiceDataRest() {
-        sampleLineAction = JavaSampleApp.getSampleLineAction();
-    }
+    public InvoiceDataResponse getInvoiceData(String id) throws BaseException {
+        InvoiceDataResponse response = new InvoiceDataResponse();
+        response.setInvoiceData(sampleLineAction.getInvoiceData(id));
 
-    public InvoiceDataType getInvoiceData(String id) throws BaseException {
-        return sampleLineAction.getInvoiceData(id);
+        return response;
     };
 
-    public InvoiceDataListType invoiceDataQuery(InvoiceDataListQueryType invoiceListQuery) throws BaseException {
-        return sampleLineAction.invoiceDataQuery(invoiceListQuery);
+    public InvoiceDataListQueryResponse invoiceDataQuery(InvoiceDataListQueryRequest request) throws BaseException {
+        InvoiceDataListQueryType queryParam = request.getQueryParam();
+        InvoiceDataListQueryResponse response = new InvoiceDataListQueryResponse();
+        response.setInvoices(sampleLineAction.invoiceDataQuery(queryParam));
+
+        return response;
     };
 
-    public InvoiceDataType postInvoiceData(InvoiceDataType invoiceData) {
-        return sampleLineAction.saveInvoiceData(invoiceData);
+    public InvoiceDataResponse postInvoiceData(InvoiceDataRequest request) {
+        InvoiceDataType invoiceData = request.getInvoiceData();
+        invoiceData.getInvoice().setId(null);
+        InvoiceDataResponse response = new InvoiceDataResponse();
+        response.setInvoiceData(sampleLineAction.saveInvoiceData(invoiceData));
+
+        return response;
     }
 
-    public InvoiceDataType putInvoiceData(String id, InvoiceDataType invoiceData) throws BaseException {
+    public InvoiceDataResponse putInvoiceData(String id, InvoiceDataRequest request) throws BaseException {
+        InvoiceDataType invoiceData = request.getInvoiceData();
         getInvoiceData(id);
         invoiceData.getInvoice().setId(id); // a payload-ban az id nem szerepel, ezért külön be kell állítani
-        return sampleLineAction.modifyInvoiceData(invoiceData);
+        InvoiceDataResponse response = new InvoiceDataResponse();
+        response.setInvoiceData(sampleLineAction.saveInvoiceData(invoiceData));
+
+        return response;
     }
 
-    public InvoiceDataType deleteInvoice(String id) throws BaseException {
-        return sampleLineAction.deleteInvoice(id);
+    public InvoiceDataResponse deleteInvoice(String id) throws BaseException {
+        InvoiceDataResponse response = new InvoiceDataResponse();
+        response.setInvoiceData(sampleLineAction.deleteInvoice(id));
+
+        return response;
     }
 }

@@ -1,43 +1,60 @@
 package hu.icellmobilsoft.onboarding.java.sample.rest;
 
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.LineListQueryType;
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.LineListType;
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.LineType;
-import hu.icellmobilsoft.onboarding.java.sample.JavaSampleApp;
-import hu.icellmobilsoft.onboarding.java.sample.action.SampleLineAction;
-import hu.icellmobilsoft.onboarding.java.sample.util.BaseException;
+import jakarta.enterprise.inject.Model;
+import jakarta.inject.Inject;
 
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.*;
+import hu.icellmobilsoft.onboarding.java.sample.action.SampleLineAction;
+import hu.icellmobilsoft.onboarding.java.sample.exception.BaseException;
+
+@Model
 public class LineRest implements ILineRest {
 
+    @Inject
     private SampleLineAction sampleLineAction;
-
-    public LineRest() {
-        sampleLineAction = JavaSampleApp.getSampleLineAction();
-    }
 
     public String getHello() {
         return "Hello world!";
     }
 
-    public LineType getLine(String id) throws BaseException {
-        return sampleLineAction.getLine(id);
+    public LineResponse getLine(String id) throws BaseException {
+        LineResponse response = new LineResponse();
+        response.setLine(sampleLineAction.getLine(id));
+
+        return response;
     };
 
-    public LineListType lineQuery(LineListQueryType lineListQuery) throws BaseException {
-        return sampleLineAction.lineQuery(lineListQuery);
+    public LineListQueryResponse lineQuery(LineListQueryRequest request) throws BaseException {
+        LineListQueryType queryParam = request.getQueryParam();
+        LineListQueryResponse response = new LineListQueryResponse();
+        response.setLines(sampleLineAction.lineQuery(queryParam));
+
+        return response;
     };
 
-    public LineType postLine(LineType line) {
-        return sampleLineAction.saveLine(line);
+    public LineResponse postLine(LineRequest request) {
+        LineType line = request.getLine();
+        line.setId(null);
+        LineResponse response = new LineResponse();
+        response.setLine(sampleLineAction.saveLine(line));
+
+        return response;
     }
 
-    public LineType putLine(String id, LineType line) throws BaseException {
+    public LineResponse putLine(String id, LineRequest request) throws BaseException {
+        LineType line = request.getLine();
         getLine(id);
         line.setId(id); // a payload-ban az id nem szerepel, ezért külön be kell állítani
-        return sampleLineAction.saveLine(line);
+        LineResponse response = new LineResponse();
+        response.setLine(sampleLineAction.saveLine(line));
+
+        return response;
     }
 
-    public LineType deleteLine(String id) throws BaseException {
-        return sampleLineAction.deleteLine(id);
+    public LineResponse deleteLine(String id) throws BaseException {
+        LineResponse response = new LineResponse();
+        response.setLine(sampleLineAction.deleteLine(id));
+
+        return response;
     }
 }

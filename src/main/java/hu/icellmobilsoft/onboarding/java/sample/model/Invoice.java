@@ -3,20 +3,42 @@ package hu.icellmobilsoft.onboarding.java.sample.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+@Entity
+@Table(name = "INVOICE")
 public class Invoice {
 
+    @Id
+    @Size(max = 32)
+    @NotNull
+    @Column(name = "ID", length = 32, nullable = false, updatable = false)
     private String id;
 
+    @Size(max = 50)
+    @Column(name = "INVOICE_NUMBER", length = 50)
     private String invoiceNumber;
 
+    @Size(max = 50)
+    @Column(name = "INVOICE_TYPE", length = 50)
     private String invoiceType;
 
+    @Size(max = 50)
+    @Column(name = "SUPPLIER_TAX_NUMBER", length = 50)
     private String supplierTaxNumber;
 
+    @Size(max = 50)
+    @Column(name = "CUSTOMER_TAX_NUMBER", length = 50)
     private String customerTaxNumber;
 
+    @Column(name = "SUM_PRICE", precision = 15, scale = 2)
     private BigDecimal sumPrice;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "INVOICELINE", joinColumns = @JoinColumn(name = "INVOICE_ID"))
+    @Column(name = "LINE_ID")
     private List<String> lines;
 
     public String getId() {
@@ -78,14 +100,8 @@ public class Invoice {
     // Ez csak tesztre van használva
     @Override
     public String toString() {
-        return '\n' + "\t\t\t{" +
-                "id='" + id + '\'' +
-                ", invoiceNumber='" + invoiceNumber + '\'' +
-                ", invoiceType='" + invoiceType + '\'' +
-                ", supplierTaxNumber='" + supplierTaxNumber + '\'' +
-                ", customerTaxNumber='" + customerTaxNumber + '\'' +
-                ", lines=" + lines +
-                ", sumPrice=" + sumPrice +
-                '}';
+        return '\n' + "\t\t\t{" + "id='" + id + '\'' + ", invoiceNumber='" + invoiceNumber + '\'' + ", invoiceType='" + invoiceType + '\''
+                + ", supplierTaxNumber='" + supplierTaxNumber + '\'' + ", customerTaxNumber='" + customerTaxNumber + '\'' + ", lines=" + lines
+                + ", sumPrice=" + sumPrice + '}';
     }
 }

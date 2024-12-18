@@ -1,12 +1,12 @@
 package hu.icellmobilsoft.onboarding.java.sample.rest;
 
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.*;
+import hu.icellmobilsoft.onboarding.java.sample.constant.XsdConstants;
+import hu.icellmobilsoft.onboarding.java.sample.validation.ValidateXML;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataListQueryType;
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataListType;
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.InvoiceDataType;
-import hu.icellmobilsoft.onboarding.java.sample.util.BaseException;
+import hu.icellmobilsoft.onboarding.java.sample.exception.BaseException;
 
 @Path("/invoice")
 public interface IInvoiceDataRest {
@@ -14,27 +14,27 @@ public interface IInvoiceDataRest {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    InvoiceDataType getInvoiceData(@PathParam("id") String id) throws BaseException;
+    InvoiceDataResponse getInvoiceData(@PathParam("id") String id) throws BaseException;
 
     @POST
     @Path("/query")
     @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    InvoiceDataListType invoiceDataQuery(InvoiceDataListQueryType invoiceListQuery) throws BaseException;
+    InvoiceDataListQueryResponse invoiceDataQuery(@ValidateXML(xsdPath = XsdConstants.XSD_PATH) InvoiceDataListQueryRequest request) throws BaseException;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    InvoiceDataType postInvoiceData(InvoiceDataType invoiceData);
+    InvoiceDataResponse postInvoiceData(@ValidateXML(xsdPath = XsdConstants.XSD_PATH) InvoiceDataRequest request);
 
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    InvoiceDataType putInvoiceData(@PathParam("id") String id, InvoiceDataType invoiceData) throws BaseException;
+    InvoiceDataResponse putInvoiceData(@PathParam("id") String id, @ValidateXML(xsdPath = XsdConstants.XSD_PATH) InvoiceDataRequest request) throws BaseException;
 
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    InvoiceDataType deleteInvoice(@PathParam("id") String id) throws BaseException;
+    InvoiceDataResponse deleteInvoice(@PathParam("id") String id) throws BaseException;
 }
