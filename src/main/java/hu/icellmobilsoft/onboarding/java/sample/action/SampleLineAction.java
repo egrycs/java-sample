@@ -67,8 +67,9 @@ public class SampleLineAction {
         return requestDataImpl.getLine(id);
     }
 
-    public LineListType lineQuery(LineListQueryType lineListQuery) throws BaseException {
-        return requestDataImpl.queryLine(lineListQuery);
+    public LineListType lineQuery(LineListQueryType queryParams, LineListQueryOrderType orderParams, QueryRequestDetails paginationParams)
+            throws BaseException {
+        return requestDataImpl.queryLine(queryParams, orderParams, paginationParams);
     }
 
     public LineType saveLine(LineType line) {
@@ -87,8 +88,9 @@ public class SampleLineAction {
         return requestDataImpl.getAllInvoiceData();
     }
 
-    public InvoiceDataListType invoiceDataQuery(InvoiceDataListQueryType invoiceDataListQuery) throws BaseException {
-        return requestDataImpl.queryInvoicesData(invoiceDataListQuery);
+    public InvoiceDataListType invoiceDataQuery(InvoiceDataListQueryType queryParams, InvoiceDataListQueryOrderType orderParams,
+            QueryRequestDetails paginationParams) throws BaseException {
+        return requestDataImpl.queryInvoicesData(queryParams, orderParams, paginationParams);
     }
 
     public InvoiceDataType saveInvoiceData(InvoiceDataType invoiceData) {

@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.LineListQueryType;
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.UnitOfMeasureType;
+import com.google.common.base.CaseFormat;
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.*;
 import jakarta.enterprise.inject.Model;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 
 import hu.icellmobilsoft.onboarding.java.sample.model.Line;
@@ -53,9 +50,14 @@ public class LineService {
         return line;
     }
 
-    public List<Line> getAllLines(LineListQueryType lineListQuery) {
-        String name = lineListQuery.getName();
-        UnitOfMeasureType unitOfMeasure = lineListQuery.getUnitOfMeasure();
+    public List<Line> getAllLines(LineListQueryType queryParams, LineListQueryOrderType orderParams, QueryRequestDetails paginationParams) {
+        String name = queryParams.getName();
+        UnitOfMeasureType unitOfMeasure = queryParams.getUnitOfMeasure();
+        LineListQueryOrderByType orderColumn = orderParams.getOrder();
+        OrderByTypeType orderDirection = orderParams.getType();
+        int page = paginationParams.getPage();
+        int rows = paginationParams.getRows();
+        int offset = (page - 1) * rows;
         List<Predicate> predicates = new ArrayList<>();
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -73,7 +75,17 @@ public class LineService {
             cq.where(cb.and(predicates.toArray(new Predicate[0])));
         }
 
-        return em.createQuery(cq).getResultList();
+        if (orderColumn != null && !orderColumn.value().isEmpty()) {
+            String oc = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, orderColumn.value());
+            Path<Object> orderPath = lineRoot.get(oc);
+            if ("DESC".equalsIgnoreCase(orderDirection.value())) {
+                cq.orderBy(cb.desc(orderPath));
+            } else {
+                cq.orderBy(cb.asc(orderPath));
+            }
+        }
+
+        return em.createQuery(cq).setFirstResult(offset).setMaxResults(rows).getResultList();
     }
 
     public List<Line> getLines(Collection<String> ids) {

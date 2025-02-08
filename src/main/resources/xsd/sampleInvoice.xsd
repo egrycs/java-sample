@@ -129,6 +129,65 @@
     <xs:complexType name="BaseResponseType">
     </xs:complexType>
 
+    <xs:simpleType name="PageType">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="1" />
+            <xs:maxInclusive value="21474836" />
+            <xs:fractionDigits value="0" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="RowsType">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="1" />
+            <xs:maxInclusive value="100" />
+            <xs:totalDigits value="3" />
+            <xs:fractionDigits value="0" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="QueryRequestDetails">
+        <xs:sequence>
+            <xs:element name="rows" type="RowsType"/>
+            <xs:element name="page" type="PageType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="OrderByTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ASC" />
+            <xs:enumeration value="DESC" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="LineListQueryOrderByType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="NAME"/>
+            <xs:enumeration value="UNIT_OF_MEASURE"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="LineListQueryOrderType">
+        <xs:sequence>
+            <xs:element name="order" type="LineListQueryOrderByType"/>
+            <xs:element name="type" type="OrderByTypeType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="InvoiceDataListQueryOrderByType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="INVOICE_NUMBER"/>
+            <xs:enumeration value="INVOICE_TYPE"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="InvoiceDataListQueryOrderType">
+        <xs:sequence>
+            <xs:element name="order" type="InvoiceDataListQueryOrderByType"/>
+            <xs:element name="type" type="OrderByTypeType"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <!-- REQUEST/RESPONSE ELEMENTS -->
     <xs:element name="SampleRequest">
         <xs:complexType>
@@ -255,7 +314,9 @@
         <xs:complexContent>
             <xs:extension base="BaseRequestType">
                 <xs:sequence>
-                    <xs:element name="queryParam" type="LineListQueryType"/>
+                    <xs:element name="queryParams" type="LineListQueryType"/>
+                    <xs:element name="orderParams" type="LineListQueryOrderType"/>
+                    <xs:element name="paginationParams" type="QueryRequestDetails"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -295,7 +356,9 @@
         <xs:complexContent>
             <xs:extension base="BaseRequestType">
                 <xs:sequence>
-                    <xs:element name="queryParam" type="InvoiceDataListQueryType"/>
+                    <xs:element name="queryParams" type="InvoiceDataListQueryType"/>
+                    <xs:element name="orderParams" type="InvoiceDataListQueryOrderType"/>
+                    <xs:element name="paginationParams" type="QueryRequestDetails"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

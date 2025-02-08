@@ -9,12 +9,12 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import hu.icellmobilsoft.onboarding.dto.sample.invoice.*;
-import hu.icellmobilsoft.onboarding.java.sample.model.Invoice;
-import hu.icellmobilsoft.onboarding.java.sample.model.Line;
-import hu.icellmobilsoft.onboarding.java.sample.exception.BaseException;
 import hu.icellmobilsoft.onboarding.java.sample.converter.InvoiceConverter;
 import hu.icellmobilsoft.onboarding.java.sample.converter.InvoiceDataTypeConverter;
 import hu.icellmobilsoft.onboarding.java.sample.converter.LineConverter;
+import hu.icellmobilsoft.onboarding.java.sample.exception.BaseException;
+import hu.icellmobilsoft.onboarding.java.sample.model.Invoice;
+import hu.icellmobilsoft.onboarding.java.sample.model.Line;
 
 @Model
 public class RequestDataImpl implements IRequestData {
@@ -39,17 +39,19 @@ public class RequestDataImpl implements IRequestData {
 
     public LineListType getAllLine() {
         LineListType lineListType = new LineListType();
-        lineService.getAllLines(new LineListQueryType()).forEach(line -> lineListType.getLine().add(lineConverter.convert(line)));
+        lineService.getAllLines(new LineListQueryType(), new LineListQueryOrderType(), new QueryRequestDetails())
+                .forEach(line -> lineListType.getLine().add(lineConverter.convert(line)));
 
         return lineListType;
     }
 
-    public LineListType queryLine(LineListQueryType lineListQuery) throws BaseException {
-        if (lineListQuery == null) {
+    public LineListType queryLine(LineListQueryType queryParams, LineListQueryOrderType orderParams, QueryRequestDetails paginationParams)
+            throws BaseException {
+        if (queryParams == null) {
             throw new BaseException("Filter not provided!");
         }
         LineListType lineListType = new LineListType();
-        setLineListType(lineService.getAllLines(lineListQuery), lineListType);
+        setLineListType(lineService.getAllLines(queryParams, orderParams, paginationParams), lineListType);
 
         return lineListType;
     }
@@ -79,17 +81,20 @@ public class RequestDataImpl implements IRequestData {
 
     public InvoiceDataListType getAllInvoiceData() {
         InvoiceDataListType invoiceDataListType = new InvoiceDataListType();
-        setInvoiceDataListType(invoiceService.getAllInvoices(new InvoiceDataListQueryType()), invoiceDataListType);
+        setInvoiceDataListType(
+                invoiceService.getAllInvoices(new InvoiceDataListQueryType(), new InvoiceDataListQueryOrderType(), new QueryRequestDetails()),
+                invoiceDataListType);
 
         return invoiceDataListType;
     }
 
-    public InvoiceDataListType queryInvoicesData(InvoiceDataListQueryType invoiceListQuery) throws BaseException {
-        if (invoiceListQuery == null) {
+    public InvoiceDataListType queryInvoicesData(InvoiceDataListQueryType queryParams, InvoiceDataListQueryOrderType orderParams,
+            QueryRequestDetails paginationParams) throws BaseException {
+        if (queryParams == null) {
             throw new BaseException("Filter not provided!");
         }
         InvoiceDataListType invoiceDataListType = new InvoiceDataListType();
-        setInvoiceDataListType(invoiceService.getAllInvoices(invoiceListQuery), invoiceDataListType);
+        setInvoiceDataListType(invoiceService.getAllInvoices(queryParams, orderParams, paginationParams), invoiceDataListType);
 
         return invoiceDataListType;
     }

@@ -25,9 +25,11 @@ public class LineRest implements ILineRest {
     };
 
     public LineListQueryResponse lineQuery(LineListQueryRequest request) throws BaseException {
-        LineListQueryType queryParam = request.getQueryParam();
+        LineListQueryType queryParams = request.getQueryParams();
+        LineListQueryOrderType orderParams = request.getOrderParams();
+        QueryRequestDetails paginationParams = request.getPaginationParams();
         LineListQueryResponse response = new LineListQueryResponse();
-        response.setLines(sampleLineAction.lineQuery(queryParam));
+        response.setLines(sampleLineAction.lineQuery(queryParams, orderParams, paginationParams));
 
         return response;
     };

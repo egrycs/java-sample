@@ -1,9 +1,9 @@
 package hu.icellmobilsoft.onboarding.java.sample.rest;
 
-import hu.icellmobilsoft.onboarding.dto.sample.invoice.*;
 import jakarta.enterprise.inject.Model;
 import jakarta.inject.Inject;
 
+import hu.icellmobilsoft.onboarding.dto.sample.invoice.*;
 import hu.icellmobilsoft.onboarding.java.sample.action.SampleLineAction;
 import hu.icellmobilsoft.onboarding.java.sample.exception.BaseException;
 
@@ -21,9 +21,11 @@ public class InvoiceDataRest implements IInvoiceDataRest {
     };
 
     public InvoiceDataListQueryResponse invoiceDataQuery(InvoiceDataListQueryRequest request) throws BaseException {
-        InvoiceDataListQueryType queryParam = request.getQueryParam();
+        InvoiceDataListQueryType queryParams = request.getQueryParams();
+        InvoiceDataListQueryOrderType orderParams = request.getOrderParams();
+        QueryRequestDetails paginationParams = request.getPaginationParams();
         InvoiceDataListQueryResponse response = new InvoiceDataListQueryResponse();
-        response.setInvoices(sampleLineAction.invoiceDataQuery(queryParam));
+        response.setInvoices(sampleLineAction.invoiceDataQuery(queryParams, orderParams, paginationParams));
 
         return response;
     };

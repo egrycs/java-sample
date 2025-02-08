@@ -18,7 +18,7 @@ public class XsdProcessingException extends BaseException {
     }
 
     public XsdProcessingException(List<XMLValidationError> errors, Throwable e) {
-        super("Xml validation failed", e);
+        super("Xml validation failed: " + errors.get(0).getError(), e);
         this.errors.addAll(errors);
     }
 
